@@ -5,19 +5,19 @@ import javax.swing.JOptionPane;
 import java.sql.CallableStatement;
 import java.sql.*;
 import javax.swing.table.DefaultTableModel;
-
+   
 
 /**
  *
  * @author Al Hadi
  */
 public class LabTask extends javax.swing.JFrame {
-
+ MidClass M=new MidClass();
     //private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(LabTask.class.getName());
-
     public LabTask() {
         initComponents();
     }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -73,20 +73,21 @@ public class LabTask extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(rowTable);
 
+        txtFrom.addActionListener(this::txtFromActionPerformed);
+
         jLabel6.setText("From");
 
         jLabel7.setText("To");
 
         btnSubmit2.setText("Submit");
+        btnSubmit2.addActionListener(this::btnSubmit2ActionPerformed);
+
+        txtTo.addActionListener(this::txtToActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(92, 92, 92)
-                .addComponent(btnSubmit1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -119,6 +120,10 @@ public class LabTask extends javax.swing.JFrame {
                     .addComponent(btnSubmit2)
                     .addComponent(txtTo, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(87, 87, 87))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(93, 93, 93)
+                .addComponent(btnSubmit1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -159,9 +164,9 @@ public class LabTask extends javax.swing.JFrame {
                             .addComponent(txtTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(28, 28, 28)
                         .addComponent(btnSubmit2)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnSubmit1)
-                .addGap(64, 64, 64))
+                .addContainerGap(107, Short.MAX_VALUE))
         );
 
         pack();
@@ -176,7 +181,7 @@ public class LabTask extends javax.swing.JFrame {
 
     private void btnSubmit1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmit1ActionPerformed
         try {
-            // JDBC connection
+            //  JDBC connection
             final String DB_URL = "jdbc:oracle:thin:@localhost:1521:xe";
             final String DB_USER = "system";
             final String DB_PASS = "MyNewPass123";
@@ -184,7 +189,6 @@ public class LabTask extends javax.swing.JFrame {
             Class.forName("oracle.jdbc.driver.OracleDriver");
             Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
 
-           
             JOptionPane.showMessageDialog(this, "Connected to database successfully");
             CallableStatement cs = con.prepareCall("{ call FindStudentFullInformation(?,?,?,?,?,?) }");
 
@@ -242,12 +246,39 @@ public class LabTask extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
         }
 
-        
+
     }//GEN-LAST:event_btnSubmit1ActionPerformed
 
-    
+    private void btnSubmit2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmit2ActionPerformed
+            M.setFrom(txtFrom.getText().trim());
+            M.setTo(txtTo.getText().trim());
+
+    if(M.getFrom().isEmpty() || M.getTo().isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Warning: Two IDs are needed");
+        return;
+    }
+
+    // Open CristalReport JFrame and pass MidClass
+    CristalReport cr = new CristalReport(M);
+    cr.setVisible(true); // show the new JFrame
+    cr.tableContent2();  // fill table       
+       
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSubmit2ActionPerformed
+
+    private void txtFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFromActionPerformed
+       M.setFrom(txtFrom.getText().trim());
+      
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtFromActionPerformed
+
+    private void txtToActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtToActionPerformed
+    M.setTo(txtTo.getText().trim());
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtToActionPerformed
+
     public static void main(String args[]) {
-        
+
         java.awt.EventQueue.invokeLater(() -> new LabTask().setVisible(true));
     }
 

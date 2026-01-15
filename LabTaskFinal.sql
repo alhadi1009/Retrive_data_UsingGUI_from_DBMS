@@ -40,7 +40,7 @@ INSERT INTO StudentAreaStatus VALUES ('S004', 'ACC004', 'Sylhet');
 INSERT INTO StudentAreaStatus VALUES ('S005', 'ACC005', 'Barishal');
 
 select *from StudentAreaStatus;
-
+--// Procedure for find Full info ;;
 Create or Replace Procedure FindStudentFullInformation(
 Stu_id In VARCHAR2,
 stu_name in VARCHAR2,
@@ -77,3 +77,34 @@ begin
 end;
 /
 PRINT rc;
+--// Second procedure for cristal report;;
+Create or replace Procedure FindStudentFullInformationSheet(
+FirstId In varchar2,
+SecondId In varchar2,
+result_cursor OUT SYS_REFCURSOR 
+)
+As Begin
+ OPEN result_cursor FOR
+     select e.StudentID,
+       e.StudentName,
+       e.StudentDepartment,
+       a.AccountNumber,
+       a.AccountBalance,
+       a.StudentMobileNumber,
+       ar.District
+from StudentEducationalStatus e Left join StudentAreaStatus ar on e.StudentID = ar.ID
+                                Left join StudentAccountStatus a on ar.AccountNo = a.AccountNumber
+ WHERE e.StudentID BETWEEN FirstId AND SecondId;
+     
+     
+END;
+/
+
+VARIABLE rc REFCURSOR;
+begin
+ FindStudentFullInformationSheet('S001','S003',:rc);
+end;
+/
+PRINT rc;
+
+
